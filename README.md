@@ -22,6 +22,22 @@ npm install
 npm start
 ```
 
+## 发布新版本
+
+推送 `v*` 格式的 tag（如 `v0.0.1`）会自动触发 GitHub Actions，在 Windows / macOS / Linux 三平台打包并创建 GitHub Release。
+
+```bash
+npm run release              # 默认：最新 tag 的补丁版本 +0.0.1（无 tag 时从 v0.0.1 开始）
+npm run release -- 0.2.0     # 指定版本（v 前缀可省略，必须 x.y.z 三段式）
+npm run release -- --dry-run # 只预览将发布的版本
+```
+
+发布完成后在 [Releases](https://github.com/oduan/emby-downloader/releases) 页面下载：
+
+- Windows：`EmbyDownloader-Setup-x.y.z.exe`（安装版）/ `EmbyDownloader-Portable-x.y.z.exe`（便携版）
+- macOS：`EmbyDownloader-x.y.z-x64/arm64.dmg`（未签名，首次打开需右键 → 打开）
+- Linux：`EmbyDownloader-x.y.z.AppImage`
+
 ## 配置文件
 
 配置（服务器、登录凭证、设置）保存在：

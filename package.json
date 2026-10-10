@@ -1,14 +1,69 @@
 {
   "name": "emby-downloader",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Emby/Jellyfin 媒体服务器内容下载器",
   "main": "main.js",
   "license": "MIT",
+  "author": "oduan",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oduan/emby-downloader.git"
+  },
   "scripts": {
     "start": "electron .",
-    "smoke": "electron . --smoke"
+    "smoke": "electron . --smoke",
+    "release": "node scripts/release.js"
+  },
+  "build": {
+    "appId": "com.github.oduan.emby-downloader",
+    "productName": "Emby Downloader",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "lib/**/*",
+      "renderer/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "EmbyDownloader-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "EmbyDownloader-Portable-${version}.${ext}"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "identity": null,
+      "category": "public.app-category.entertainment",
+      "artifactName": "EmbyDownloader-${version}-${arch}.${ext}"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Utility",
+      "artifactName": "EmbyDownloader-${version}.${ext}"
+    }
   },
   "devDependencies": {
-    "electron": "^37.0.0"
+    "electron": "^37.0.0",
+    "electron-builder": "^26.0.0"
   }
 }
