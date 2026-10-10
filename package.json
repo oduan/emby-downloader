@@ -1,0 +1,14 @@
+{
+  "name": "emby-downloader",
+  "version": "1.0.0",
+  "description": "Emby/Jellyfin 媒体服务器内容下载器",
+  "main": "main.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "smoke": "electron . --smoke"
+  },
+  "devDependencies": {
+    "electron": "^37.0.0"
+  }
+}

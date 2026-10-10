@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+  <title>Emby 下载器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand"><span class="brand-logo">⬇</span>Emby 下载器</div>
+        <button id="btn-add-server" class="btn primary block">＋ 添加服务器</button>
+      </div>
+      <div id="server-tree" class="server-tree"></div>
+      <div class="sidebar-footer">
+        <button id="btn-downloads" class="footer-btn" title="下载管理">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          下载管理
+          <span id="dl-badge" class="badge hidden">0</span>
+        </button>
+        <button id="btn-settings" class="footer-btn" title="设置">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          设置
+        </button>
+      </div>
+    </aside>
+
+    <main id="main">
+      <div id="main-header">
+        <div id="breadcrumb" class="breadcrumb">Emby 下载器</div>
+        <div id="search-box" class="search-box hidden">
+          <span class="search-icon">🔍</span>
+          <input id="search-input" type="text" placeholder="搜索当前分组…" spellcheck="false">
+          <button id="search-clear" class="icon-btn hidden" title="清除">✕</button>
+        </div>
+      </div>
+      <div id="list-container">
+        <div id="item-list" class="item-list"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 下载管理抽屉 -->
+  <div id="downloads-drawer" class="drawer hidden">
+    <div class="drawer-header">
+      <span>下载管理</span>
+      <div class="drawer-actions">
+        <button id="btn-open-folder" class="btn ghost small">打开保存目录</button>
+        <button id="btn-clear-finished" class="btn ghost small">清空已完成</button>
+        <button id="drawer-close" class="icon-btn" title="关闭">✕</button>
+      </div>
+    </div>
+    <div id="download-list" class="download-list"></div>
+  </div>
+
+  <!-- 添加服务器 -->
+  <div id="add-server-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-title">添加 Emby 服务器</div>
+      <div class="form-row">
+        <label>服务器地址</label>
+        <input id="input-server-url" type="text" placeholder="例如 http://192.168.1.10:8096" spellcheck="false">
+        <div class="hint">支持 Emby 与 Jellyfin 服务器</div>
+      </div>
+      <div class="form-row">
+        <label>用户名</label>
+        <input id="input-username" type="text" placeholder="Emby / Jellyfin 用户名" spellcheck="false">
+      </div>
+      <div class="form-row">
+        <label>密码</label>
+        <input id="input-password" type="password" placeholder="密码">
+      </div>
+      <div id="add-server-error" class="form-error hidden"></div>
+      <div class="modal-actions">
+        <button id="add-server-cancel" class="btn ghost">取消</button>
+        <button id="add-server-submit" class="btn primary">连接并添加</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设置 -->
+  <div id="settings-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-title">设置</div>
+      <div class="form-row">
+        <label>保存位置</label>
+        <div class="path-row">
+          <input id="input-download-path" type="text" readonly>
+          <button id="settings-browse" class="btn ghost">浏览…</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>同时下载数（1 - 6）</label>
+        <input id="input-concurrency" type="number" min="1" max="6" step="1">
+      </div>
+      <div class="modal-actions">
+        <button id="settings-cancel" class="btn ghost">取消</button>
+        <button id="settings-save" class="btn primary">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="context-menu" class="context-menu hidden"></div>
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
